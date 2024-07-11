@@ -9,7 +9,7 @@ from joystickhandler.joystick_handler import *
 
 
 def main():
-    app = App(['192.168.0.100', '192.168.0.105', '192.168.0.21', '192.168.0.22', '192.168.0.23', '192.168.0.113'])
+    app = App(['10.0.13.13'])
     clicked_ip = app.run()
     robot_addr = clicked_ip
 

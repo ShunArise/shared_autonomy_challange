@@ -1,3 +1,5 @@
+import time
+
 import pygame
 import pygame_gui
 
@@ -31,6 +33,8 @@ class App:
         self.ping_manager = PingManager(self.ip_addresses)
         self.create_buttons()
 
+        print("SET KAMERA STREAM")
+        time.sleep(2)
         self.robot_image_display = RobotImageDisplay()
         self.robot_image_display.screen = self.screen  # Set the screen for RobotImageDisplay
 
@@ -52,6 +56,7 @@ class App:
             self.buttons.append(button)
             self.ip_button_map[ip] = button
 
+
     def run(self):
         clock = pygame.time.Clock()
         is_running = True
@@ -68,6 +73,8 @@ class App:
                         for ip, button in self.ip_button_map.items():
                             if event.ui_element == button:
                                 clicked_ip = ip
+                                self.manager.clear_and_reset()
+
                                 self.robot_image_display.start_receiving(clicked_ip)
                                 break
 
@@ -75,10 +82,12 @@ class App:
 
             self.manager.update(time_delta)
             self.screen.fill((255, 255, 255))
+
             self.robot_image_display.draw_images()  # Draw images from the robot cameras
             self.manager.draw_ui(self.screen)
 
             pygame.display.flip()
 
         print(clicked_ip, "clicked")
+
         return clicked_ip
