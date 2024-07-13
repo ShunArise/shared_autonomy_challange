@@ -23,12 +23,13 @@ class JoystickHandler:
                         # Skaliere die Joystick-Achswerte (im Bereich -1 bis 1)
                         x_value = joystick.get_axis(0)
                         y_value = joystick.get_axis(1)
+
                         x_value2 = joystick.get_axis(2)
                         y_value2 = joystick.get_axis(3)
 
 
                         # Ausgabe der Vektoren
-                        self.callback(x_value, y_value, x_value2, y_value2)
+                        self.joystick_callback(x_value, y_value, x_value2, y_value2)
 
                     elif event.type == pygame.JOYBUTTONDOWN:
                         # Behandle Knopfdruck-Ereignisse
@@ -40,6 +41,9 @@ class JoystickHandler:
                             self.button_callback(event.button, "shootR")
                         elif event.button == 6:
                             self.button_callback(event.button, "align")
+                        elif event.button == 0:
+                            self.button_callback(event.button, "stopmove")
+
 
                     elif event.type == pygame.JOYBUTTONUP:
                         # Behandle Knopfloslass-Ereignisse
@@ -62,13 +66,17 @@ class JoystickHandler:
         elif button == 8 and action == "shootstop":
             self.walk_control.walk_tuner.options["mode"].value = WalkModes.WALK_STAND.value
 
+        elif button == 0 and action == "stopmove":
+            self.walk_control.set_velocity(0, 0, 0) # stehen und nichts tun
+
+
 
     def joystick_callback(self, x1, y1, x2, y2):
 
-        vx = y1 * 5  # Skalierung der Geschwindigkeit
-        vy = x1 * 5  #  Test 5
-        va = x2 * 5
-        print(f"vx: ", {vx}, "vy: ", {vy}, "va: ", {va})
+        vx = y1 * 0.5  # Skalierung der Geschwindigkeit
+        vy = x1 * 0.5
+        va = x2 * 0.5
+        #print(f"vx: ", {vx}, "vy: ", {vy}, "va: ", {va})
         self.walk_control.set_velocity(-vx, -vy, -va)
 
 

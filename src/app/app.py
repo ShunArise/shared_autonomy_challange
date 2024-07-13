@@ -35,8 +35,8 @@ class App:
 
         print("SET KAMERA STREAM")
         time.sleep(2)
-        self.robot_image_display = RobotImageDisplay()
-        self.robot_image_display.screen = self.screen  # Set the screen for RobotImageDisplay
+        #self.robot_image_display = RobotImageDisplay()
+        #self.robot_image_display.screen = self.screen  # Set the screen for RobotImageDisplay
 
     def draw_text(self, text, x, y):
         self.font = pygame.font.Font(None, 54)
@@ -56,7 +56,6 @@ class App:
             self.buttons.append(button)
             self.ip_button_map[ip] = button
 
-
     def run(self):
         clock = pygame.time.Clock()
         is_running = True
@@ -73,21 +72,21 @@ class App:
                         for ip, button in self.ip_button_map.items():
                             if event.ui_element == button:
                                 clicked_ip = ip
+                                print(clicked_ip, "clicked")
                                 self.manager.clear_and_reset()
+                                print("[WARNING]: before Break in app.py")
 
-                                self.robot_image_display.start_receiving(clicked_ip)
-                                break
+                                is_running = False
+                                break  # Exit the inner loop
 
                 self.manager.process_events(event)
 
             self.manager.update(time_delta)
             self.screen.fill((255, 255, 255))
 
-            self.robot_image_display.draw_images()  # Draw images from the robot cameras
             self.manager.draw_ui(self.screen)
 
             pygame.display.flip()
 
-        print(clicked_ip, "clicked")
-
+        print("[INFO]: return clicked_ip")
         return clicked_ip

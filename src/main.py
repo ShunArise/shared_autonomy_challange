@@ -1,20 +1,16 @@
-from enum import Enum
-
-import pygame
-import pygame_gui
-import sys
 from app.app import *
 from joystickhandler.joystick_handler import *
 
 
 
-def main():
-    app = App(['10.0.13.13'])
+def main(joystick):
+    app = App(['192.168.13.4'])
     clicked_ip = app.run()
     robot_addr = clicked_ip
 
-    robot_display = RobotImageDisplay()
-    robot_display.run(robot_addr)
+    #robot_display = RobotImageDisplay()
+    #robot_display.run(robot_addr)
+    print("[WARNING]: Before Walk_control")
 
     walk_control = WalkControl(robot_addr)
     handler = JoystickHandler(walk_control)
@@ -34,6 +30,8 @@ if __name__ == "__main__":
         exit()
 
     # Überprüfen, ob Joysticks angeschlossen sind
+    joystick = None
+
     joystick_count = pygame.joystick.get_count()
     if joystick_count > 0:
         print(f"{joystick_count} Joystick(s) gefunden.")
@@ -48,4 +46,5 @@ if __name__ == "__main__":
     else:
         print("Kein Joystick gefunden.")
 
-    main()
+
+    main(joystick)

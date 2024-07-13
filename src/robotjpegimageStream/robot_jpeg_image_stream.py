@@ -60,4 +60,4 @@ Re-raising exception ...
         if not self.images_lower_cam.empty():
             image_data = self.images_lower_cam.get()
             image_lower = pygame.image.load(io.BytesIO(image_data))
-            self.screen.blit(image_lower, (0, 480))
+            self.screen.blit(image_lower, (0, 0))
