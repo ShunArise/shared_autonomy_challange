@@ -4,7 +4,7 @@ from joystickhandler.joystick_handler import *
 
 
 def main(joystick):
-    app = App(['192.168.13.4'])
+    app = App(['192.168.0.114'])
     clicked_ip = app.run()
     robot_addr = clicked_ip
 

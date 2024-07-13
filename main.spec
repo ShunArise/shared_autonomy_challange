@@ -19,7 +19,7 @@ def find_modules(path):
 hiddenimports = find_modules('src')
 
 a = Analysis(
-    ['tests/robot_jpeg_image_stream.py'],
+    ['src/main.py'],
     pathex=['.', './src'],
     binaries=[],
     datas=[],
