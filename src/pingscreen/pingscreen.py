@@ -3,11 +3,10 @@ import time
 import pygame
 import pygame_gui
 
-from src.pingmanger.PingManger import PingManager
-from src.robotjpegimageStream.robot_jpeg_image_stream import RobotImageDisplay
+from src.pingscreen.pingmanger.PingManger import PingManager
 
 
-class App:
+class PingScreen:
     def __init__(self, ips):
         pygame.init()
         self.SCREEN_WIDTH = 1000
@@ -16,6 +15,8 @@ class App:
         # Constants for colors
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
+        self.random = (42, 21, 245)
+
 
         self.ip_addresses = ips
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
@@ -23,20 +24,20 @@ class App:
         self.screen.fill(self.WHITE)
         self.font = pygame.font.Font(None, 24)
 
-        self.draw_text("Pinging IP Addresses...", self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2 - 20)
+        self.draw_text("Pinging IP Address...", self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2 - 20)
         pygame.display.flip()
         pygame.time.wait(2000)
 
         self.buttons = []
         self.ip_button_map = {}
-
         self.ping_manager = PingManager(self.ip_addresses)
         self.create_buttons()
 
-        print("SET KAMERA STREAM")
         time.sleep(2)
         #self.robot_image_display = RobotImageDisplay()
         #self.robot_image_display.screen = self.screen  # Set the screen for RobotImageDisplay
+        self.run()
+
 
     def draw_text(self, text, x, y):
         self.font = pygame.font.Font(None, 54)
@@ -45,7 +46,11 @@ class App:
         self.screen.blit(text_obj, text_rect)
 
     def create_buttons(self):
+
         reachable_ips = self.ping_manager.get_reachable_ips()
+
+        self.draw_text("Pinging IP Addresses...", self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2 - 20)
+
 
         for ip in reachable_ips:
             button = pygame_gui.elements.UIButton(
@@ -74,7 +79,6 @@ class App:
                                 clicked_ip = ip
                                 print(clicked_ip, "clicked")
                                 self.manager.clear_and_reset()
-                                print("[WARNING]: before Break in app.py")
 
                                 is_running = False
                                 break  # Exit the inner loop

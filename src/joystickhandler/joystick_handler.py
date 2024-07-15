@@ -66,16 +66,13 @@ class JoystickHandler:
         elif button == 8 and action == "shootstop":
             self.walk_control.walk_tuner.options["mode"].value = WalkModes.WALK_STAND.value
 
-        elif button == 0 and action == "stopmove":
-            self.walk_control.set_velocity(0, 0, 0) # stehen und nichts tun
-
 
 
     def joystick_callback(self, x1, y1, x2, y2):
 
         vx = y1 * 0.5  # Skalierung der Geschwindigkeit
         vy = x1 * 0.5
-        va = x2 * 0.5
+        va = x2 * 2
         #print(f"vx: ", {vx}, "vy: ", {vy}, "va: ", {va})
         self.walk_control.set_velocity(-vx, -vy, -va)
 

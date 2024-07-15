@@ -1,5 +1,7 @@
 import platform
 import subprocess
+import sys
+
 
 class PingManager:
     def __init__(self, ip_addresses):
@@ -42,6 +44,10 @@ class PingManager:
         for ip in self.ip_addresses:
             if self.ping_host(ip):
                 reachable_ips.append(ip)
+
+        if not reachable_ips:
+            print("[ERROR] No reachable ips found]")
+            sys.exit(0)
         print(f"Returned reachable IPs: {reachable_ips}")
         return reachable_ips
 
