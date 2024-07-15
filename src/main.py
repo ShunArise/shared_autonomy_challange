@@ -1,11 +1,16 @@
-from pingscreen.pingscreen import *
+from app.app import *
 from joystickhandler.joystick_handler import *
 
+
+
 def main(joystick):
-    robot_addr = PingScreen(['10.0.13.17'])
+    app = App(['192.168.0.114'])
+    clicked_ip = app.run()
+    robot_addr = clicked_ip
 
     #robot_display = RobotImageDisplay()
     #robot_display.run(robot_addr)
+    print("[WARNING]: Before Walk_control")
 
     walk_control = WalkControl(robot_addr)
     handler = JoystickHandler(walk_control)
