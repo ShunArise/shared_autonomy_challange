@@ -75,7 +75,7 @@ class JoystickHandler:
 
         vx = y1 * 0.5  # Skalierung der Geschwindigkeit
         vy = x1 * 0.5
-        va = x2 * 0.5
+        va = x2 * 2
         #print(f"vx: ", {vx}, "vy: ", {vy}, "va: ", {va})
         self.walk_control.set_velocity(-vx, -vy, -va)
 
