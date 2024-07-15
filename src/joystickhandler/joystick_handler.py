@@ -28,6 +28,7 @@ class JoystickHandler:
                         y_value2 = joystick.get_axis(3)
 
 
+
                         # Ausgabe der Vektoren
                         self.joystick_callback(x_value, y_value, x_value2, y_value2)
 
