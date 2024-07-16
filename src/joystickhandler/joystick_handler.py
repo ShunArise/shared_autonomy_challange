@@ -72,11 +72,18 @@ class JoystickHandler:
 
         if r1 >= 0.5:
             print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
-            self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_RIGHT.value
+            self.walk_control.walk_tuner.options["button_pressed"].value = True
+
+        elif r1 <= 0.5:
+            self.walk_control.walk_tuner.options["button_pressed"].value = False
 
         if r2 >= 0.5:
             print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
-            self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_LEFT.value
+            self.walk_control.walk_tuner.options["button_pressed"].value = True
+
+        elif r2 <= 0.5:
+            self.walk_control.walk_tuner.options["button_pressed"].value = False
+
 
 
         vx = y1 * 0.5  # Skalierung der Geschwindigkeit
