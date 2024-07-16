@@ -73,6 +73,7 @@ class App:
                             if event.ui_element == button:
                                 clicked_ip = ip
                                 print(clicked_ip, "clicked")
+
                                 self.manager.clear_and_reset()
                                 print("[WARNING]: before Break in app.py")
 

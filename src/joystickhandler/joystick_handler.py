@@ -23,11 +23,12 @@ class JoystickHandler:
                         # Skaliere die Joystick-Achswerte (im Bereich -1 bis 1)
                         x_value = joystick.get_axis(0)
                         y_value = joystick.get_axis(1)
-
                         x_value2 = joystick.get_axis(2)
                         y_value2 = joystick.get_axis(3)
+                        r1 = joystick.get_axis(4)
+                        r2 = joystick.get_axis(5)
 
-
+                        print(x_value, y_value, x_value2, y_value2, r1, r2)
 
                         # Ausgabe der Vektoren
                         self.joystick_callback(x_value, y_value, x_value2, y_value2)
@@ -76,7 +77,7 @@ class JoystickHandler:
 
         vx = y1 * 0.5  # Skalierung der Geschwindigkeit
         vy = x1 * 0.5
-        va = x2 * 0.5
+        va = x2 * 2
         #print(f"vx: ", {vx}, "vy: ", {vy}, "va: ", {va})
         self.walk_control.set_velocity(-vx, -vy, -va)
 
