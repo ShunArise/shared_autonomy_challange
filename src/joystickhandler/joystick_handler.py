@@ -30,8 +30,10 @@ class JoystickHandler:
 
                         print(x_value, y_value, x_value2, y_value2, r1, r2)
 
+
+
                         # Ausgabe der Vektoren
-                        self.joystick_callback(x_value, y_value, x_value2, y_value2)
+                        self.joystick_callback(x_value, y_value, x_value2, y_value2, r1, r2)
 
                     elif event.type == pygame.JOYBUTTONDOWN:
                         # Behandle Knopfdruck-Ereignisse
@@ -73,7 +75,11 @@ class JoystickHandler:
 
 
 
-    def joystick_callback(self, x1, y1, x2, y2):
+    def joystick_callback(self, x1, y1, x2, y2, r1, r2):
+
+        if r1 >= 0.5 or r2 >= 0.5:
+            print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
+            self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_RIGHT.value
 
         vx = y1 * 0.5  # Skalierung der Geschwindigkeit
         vy = x1 * 0.5
