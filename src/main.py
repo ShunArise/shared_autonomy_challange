@@ -14,6 +14,7 @@ def main(joystick):
 
     robot_addr = "10.0.13.17"
     walk_control = WalkControl(robot_addr)
+    print("[INFO]: After Walk_control; Before JoystickHandler")
     handler = JoystickHandler(walk_control)
     handler.get_joystick_values(joystick)
 

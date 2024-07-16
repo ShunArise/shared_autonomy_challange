@@ -15,9 +15,12 @@ class WalkControl:
     def __init__(self, ip):
         # Connect to robot
         self.robot = roptions.RobotOptionConnection()
+        print("HIER")
         self.robot.connect(ip)
+        print("da")
         try:
             self.walk_tuner = self.robot.firmware_options.option_sets["manual_strategy"]
+            print("")
             self.param_tuner = self.robot.bridge_options.option_sets["walkingengine"]
         except KeyError:
             print('''
@@ -27,7 +30,7 @@ Re-raising exception ...
 '''.format(ip), file=sys.stderr)
             raise
         # self.param_tuner2 = self.robot.bridge_options.option_sets["anklebalancer"]
-
+        print("ALLE ALLE")
     def set_velocity(self, vx, vy, va):
         if vx == 0 and vy == 0 and va == 0:
             self.walk_tuner.options["mode"].value = WalkModes.WALK_STAND.value
