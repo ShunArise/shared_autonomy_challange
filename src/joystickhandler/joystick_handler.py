@@ -19,50 +19,49 @@ class JoystickHandler:
             running = True
             while running:
                 # Ereignisse durchgehen
-                print("IN WHILE")
-                for event in pygame.event.get():
-                    print("PYGAME EVENT GET")
-                    if event.type == pygame.JOYAXISMOTION:
-                        print("JOY_AXIS_MOTION")
-                        # Skaliere die Joystick-Achswerte (im Bereich -1 bis 1)
-                        x_value = joystick.get_axis(0)
-                        y_value = joystick.get_axis(1)
-                        x_value2 = joystick.get_axis(2)
-                        y_value2 = joystick.get_axis(3)
-                        r1 = joystick.get_axis(4)
-                        r2 = joystick.get_axis(5)
+                event = pygame.event.wait()
+                print(event)
+                if event.type == pygame.JOYAXISMOTION:
+                    print("JOY_AXIS_MOTION")
+                    # Skaliere die Joystick-Achswerte (im Bereich -1 bis 1)
+                    x_value = joystick.get_axis(0)
+                    y_value = joystick.get_axis(1)
+                    x_value2 = joystick.get_axis(2)
+                    y_value2 = joystick.get_axis(3)
+                    r1 = joystick.get_axis(4)
+                    r2 = joystick.get_axis(5)
 
-                        print(x_value, y_value, x_value2, y_value2, r1, r2)
-
+                    print(x_value, y_value, x_value2, y_value2, r1, r2)
 
 
-                        # Ausgabe der Vektoren
-                        self.joystick_callback(x_value, y_value, x_value2, y_value2, r1, r2)
 
-                    elif event.type == pygame.JOYBUTTONDOWN:
-                        # Behandle Knopfdruck-Ereignisse
-                        print(f"Joystick {event.joy} Button {event.button} pressed.")
+                    # Ausgabe der Vektoren
+                    self.joystick_callback(x_value, y_value, x_value2, y_value2, r1, r2)
 
-                        if event.button == 7:  # Shoot left
-                            self.button_callback(event.button, "shootL")
-                        elif event.button == 8:  # Shoot right
-                            self.button_callback(event.button, "shootR")
-                        elif event.button == 6:
-                            self.button_callback(event.button, "align")
-                        elif event.button == 0:
-                            self.button_callback(event.button, "stopmove")
+                elif event.type == pygame.JOYBUTTONDOWN:
+                    # Behandle Knopfdruck-Ereignisse
+                    print(f"Joystick {event.joy} Button {event.button} pressed.")
+
+                    if event.button == 7:  # Shoot left
+                        self.button_callback(event.button, "shootL")
+                    elif event.button == 8:  # Shoot right
+                        self.button_callback(event.button, "shootR")
+                    elif event.button == 6:
+                        self.button_callback(event.button, "align")
+                    elif event.button == 0:
+                        self.button_callback(event.button, "stopmove")
 
 
-                    elif event.type == pygame.JOYBUTTONUP:
-                        # Behandle Knopfloslass-Ereignisse
-                        print(f"Joystick {event.joy} Button {event.button} released.")
-                        if event.button in {7, 8}:
-                            self.button_callback(event.button, "shootstop")
-                        elif event.button == 6:
-                            self.button_callback(event.button, "alignstop")
+                elif event.type == pygame.JOYBUTTONUP:
+                    # Behandle Knopfloslass-Ereignisse
+                    print(f"Joystick {event.joy} Button {event.button} released.")
+                    if event.button in {7, 8}:
+                        self.button_callback(event.button, "shootstop")
+                    elif event.button == 6:
+                        self.button_callback(event.button, "alignstop")
 
-                    elif event.type == pygame.QUIT:
-                        running = False # false to break While True
+                elif event.type == pygame.QUIT:
+                    running = False # false to break While True
 
         finally:
             pygame.quit()
