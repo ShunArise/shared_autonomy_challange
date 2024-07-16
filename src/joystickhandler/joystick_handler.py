@@ -69,20 +69,14 @@ class JoystickHandler:
 
     def joystick_callback(self, x1, y1, x2, y2, r1, r2):
 
-        #if r1 >= 0.5:
-        #    print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
-        #    self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_RIGHT.value
-        #elif r1 <= 0.5:
-        #   print("Stehen, schießen beenden !!!")
-        #    self.walk_control.walk_tuner.options["mode"].value = WalkModes.WALK_STAND.value
 
+        if r1 >= 0.5:
+            print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
+            self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_RIGHT.value
 
-        #if r2 >= 0.5:
-        #    print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
-        #    self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_LEFT.value
-        #elif r2 <= 0.5:
-        #    print("Stehen, schießen beenden !!!")
-        #    self.walk_control.walk_tuner.options["mode"].value = WalkModes.WALK_STAND.value
+        if r2 >= 0.5:
+            print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
+            self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_LEFT.value
 
 
         vx = y1 * 0.5  # Skalierung der Geschwindigkeit
