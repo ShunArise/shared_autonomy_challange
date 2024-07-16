@@ -12,12 +12,16 @@ class JoystickHandler:
 
 
     def get_joystick_values(self, joystick):
+        print("HALLO")
         try:
+
             # Hauptereignisschleife
             running = True
             while running:
                 # Ereignisse durchgehen
+                print("IN WHILE")
                 for event in pygame.event.get():
+                    print("PYGAME EVENT GET")
                     if event.type == pygame.JOYAXISMOTION:
                         print("JOY_AXIS_MOTION")
                         # Skaliere die Joystick-Achswerte (im Bereich -1 bis 1)
