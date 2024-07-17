@@ -31,7 +31,6 @@ class JoystickHandler:
                         print(x_value, y_value, x_value2, y_value2, r1, r2)
 
 
-
                         # Ausgabe der Vektoren
                         self.joystick_callback(x_value, y_value, x_value2, y_value2, r1, r2)
 
@@ -70,13 +69,12 @@ class JoystickHandler:
     def joystick_callback(self, x1, y1, x2, y2, r1, r2):
 
 
-        if r1 >= 0.5:
+        if r1 >= 0.5 or r2 >= 0.5:
             print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
-            self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_RIGHT.value
+            self.walk_control.strategy.options["button_pressed"].value = True
 
-        if r2 >= 0.5:
-            print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
-            self.walk_control.walk_tuner.options["mode"].value = WalkModes.SHOOT_LEFT.value
+        if r1 <= 0.5 or r2 <= 0.5:
+            self.walk_control.strategy.options["button_pressed"].value = False
 
 
         vx = y1 * 0.5  # Skalierung der Geschwindigkeit

@@ -18,6 +18,7 @@ class WalkControl:
         self.robot.connect(ip)
         try:
             self.walk_tuner = self.robot.firmware_options.option_sets["walktuner"]
+            self.strategy = self.robot.firmware_options.option_sets["manual_strategy"]
             self.param_tuner = self.robot.bridge_options.option_sets["walkingengine"]
         except KeyError:
             print('''
