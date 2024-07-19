@@ -1,8 +1,7 @@
 from app.app import *
 from src.joystickhandler.joystick_handler import *
 from src.walkcontrol.walk_control import *
-from src.naoshow.NaoShow import *
-
+import src.naoshow.Gui as GUI
 
 def main(joystick):
     #app = App(['10.0.13.17'])
@@ -16,14 +15,9 @@ def main(joystick):
 
     robot_addr = "192.168.13.11"  # roboter abhängig
     walk_control = WalkControl(robot_addr)
-    handler = JoystickHandler(walk_control, joystick, isrunning)
-    handler.start()
-
-    nao_control = NaoControl(robot_addr, isrunning)
-    nao_control.start()
-
-    nao_control.join()
-    handler.join()
+    
+    gui = GUI()
+    gui.run()
 
 if __name__ == "__main__":
     print("Systems start...")
