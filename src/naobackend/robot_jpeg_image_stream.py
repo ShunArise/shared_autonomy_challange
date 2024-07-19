@@ -7,11 +7,12 @@ import sys
 from queue import SimpleQueue
 
 
+
 class RobotJpegImageStream:
     images_upper_cam: SimpleQueue[bytes]
     images_lower_cam: SimpleQueue[bytes]
 
-    max_images_in_queue = 5
+    max_images_in_queue = 1
 
     def __init__(self, ipaddr: str, port: int = 9999):
         self.images_upper_cam = SimpleQueue()
@@ -23,25 +24,39 @@ class RobotJpegImageStream:
         while q.qsize() > self.max_images_in_queue:
             q.get()
 
+
+
     def _receive_image_thread(self, ipaddr: str, port: int):
-        try:
-            sock = socket.create_connection((ipaddr, port))
-        except (ConnectionRefusedError, OSError):
-            print('''
-Error: could not connect to robot {0} port {1}.
-Please check: Is the robot turned on and reachable via network and fw_sydney started?
-Re-raising exception ...
-'''.format(ipaddr, port), file=sys.stderr)
-            raise
-        fp = sock.makefile("rb")
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind(('', port))  # Bind to all available interfaces
+        
+        print(f"UDP server listening on port {port}")
 
         while True:
-            length, is_lower_cam = struct.unpack(">ib", fp.read(5))
-            buf = fp.read(length)
+            try:
+                data, addr = sock.recvfrom(65536)  # Max UDP packet size
+                if not data:
+                    continue
 
-            if is_lower_cam != 0:
-                self.images_lower_cam.put(buf)
-                self._discard_old_images(self.images_lower_cam)
-            else:
-                self.images_upper_cam.put(buf)
-                self._discard_old_images(self.images_upper_cam)
+                # Unpack the header (size and camera ID)
+                size = struct.unpack(">I", data[:4])[0]
+                cam_id = data[4]
+                
+                # Extract the image data
+                buf = data[5:]
+
+                if len(buf) != size:
+                    print(f"Warning: Received {len(buf)} bytes, expected {size} bytes", file=sys.stderr)
+                    continue
+
+                if cam_id != 0:
+                    self.images_lower_cam.put(buf)
+                    self._discard_old_images(self.images_lower_cam)
+                else:
+                    self.images_upper_cam.put(buf)
+                    self._discard_old_images(self.images_upper_cam)
+
+            except Exception as e:
+                print(f"Error receiving UDP packet: {e}", file=sys.stderr)
+
+        sock.close()

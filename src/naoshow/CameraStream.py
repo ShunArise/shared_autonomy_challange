@@ -9,7 +9,7 @@ class CameraStream(threading.Thread):
         threading.Thread.__init__(self)
         self.running = running
         self.fps = fps
-        self.stream = RobotJpegImageStream(ip_addr, port=20013)
+        self.stream = RobotJpegImageStream("127.0.0.1", 20013)
         self.image = None
         self.img_upper = None
         self.img_lower = None
