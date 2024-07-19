@@ -291,11 +291,13 @@ class RobotOptionConnection:
             self.__s_bridge = socket.create_connection((ip_addr, port_bridge))
         except (ConnectionRefusedError, OSError):
             print('''
-Error: could not connect to robot {0} port_firmware {1} port_bridge {2}.
-Please check: Is the robot turned on and reachable via network and fw_sydney started?
-Re-raising exception ...
-'''.format(ip_addr, port_firmware, port_bridge), file=sys.stderr)
+                    Error: could not connect to robot {0} port_firmware {1} port_bridge {2}.
+                    Please check: Is the robot turned on and reachable via network and fw_sydney started?
+                    Re-raising exception ...
+                    '''.format(ip_addr, port_firmware, port_bridge), file=sys.stderr)
+
             raise
+
 
         self.bridge_options = RobotOptionCollection().connect(ip_addr, port_bridge)
         self.firmware_options = RobotOptionCollection().connect(ip_addr, port_firmware)

@@ -1,21 +1,29 @@
 from app.app import *
-from joystickhandler.joystick_handler import *
-
+from src.joystickhandler.joystick_handler import *
+from src.walkcontrol.walk_control import *
+from src.naoshow.NaoShow import *
 
 
 def main(joystick):
     #app = App(['10.0.13.17'])
     #clicked_ip = app.run()
     #robot_addr = clicked_ip
+    isrunning = True
 
     #robot_display = RobotImageDisplay()
     #robot_display.run(robot_addr)
     print("[WARNING]: Before Walk_control")
 
-    robot_addr = "10.0.13.17"
+    robot_addr = "192.168.13.11"  # roboter abhängig
     walk_control = WalkControl(robot_addr)
-    handler = JoystickHandler(walk_control)
-    handler.get_joystick_values(joystick)
+    handler = JoystickHandler(walk_control, joystick, isrunning)
+    handler.start()
+
+    nao_control = NaoControl(robot_addr, isrunning)
+    nao_control.start()
+
+    nao_control.join()
+    handler.join()
 
 if __name__ == "__main__":
     print("Systems start...")
@@ -46,6 +54,5 @@ if __name__ == "__main__":
             print(f"Ein unerwarteter Fehler ist aufgetreten: {e}")
     else:
         print("Kein Joystick gefunden.")
-
 
     main(joystick)

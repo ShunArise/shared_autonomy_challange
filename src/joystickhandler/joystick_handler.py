@@ -1,86 +1,95 @@
+import threading
+
 import pygame
 import pygame_gui
-from src.walkcontrol.walk_control import *
-from src.robotjpegimageStream.robot_jpeg_image_stream import *
+from src.walkcontrol.walk_control import WalkControl
+import logging
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-class JoystickHandler:
-    def __init__(self, walk_control):
+class JoystickHandler(threading.Thread):
+    def __init__(self, walk_control, joystick, running):
+        threading.Thread.__init__(self)
 
-        #self.callback = callback
         self.walk_control = walk_control
+        self.joystick = joystick
+        logger.info("JoystickHandler initialized and started :) I hope so")
+        self.running = running
 
+    def run(self):
 
-    def get_joystick_values(self, joystick):
-        try:
-            # Hauptereignisschleife
-            running = True
-            while running:
-                # Ereignisse durchgehen
-                for event in pygame.event.get():
-                    if event.type == pygame.JOYAXISMOTION:
-                        print("JOY_AXIS_MOTION")
-                        # Skaliere die Joystick-Achswerte (im Bereich -1 bis 1)
-                        x_value = joystick.get_axis(0)
-                        y_value = joystick.get_axis(1)
-                        x_value2 = joystick.get_axis(2)
-                        y_value2 = joystick.get_axis(3)
-                        r1 = joystick.get_axis(4)
-                        r2 = joystick.get_axis(5)
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.JOYAXISMOTION:
+                    self.handle_axis_motion(event, self.joystick)
+                elif event.type == pygame.JOYBUTTONDOWN:
+                    self.handle_button_down(event)
+                elif event.type == pygame.JOYBUTTONUP:
+                    self.handle_button_up(event)
+                elif event.type == pygame.QUIT:
+                    self.running = False
+            pygame.time.delay(10)  # Reduce CPU usage
+        pygame.quit()
 
-                        print(x_value, y_value, x_value2, y_value2, r1, r2)
+    def handle_axis_motion(self, event, joystick):
+        x_value = joystick.get_axis(0)
+        y_value = joystick.get_axis(1)
+        x_value2 = joystick.get_axis(2)
+        y_value2 = joystick.get_axis(3)
+        r1 = joystick.get_axis(4)  # ZL
+        r2 = joystick.get_axis(5)  # ZR
 
+        logger.debug(f"Axis values: {x_value}, {y_value}, {x_value2}, {y_value2}, {r1}, {r2}")
+        self.joystick_callback(x_value, y_value, x_value2, y_value2, r1, r2)
 
-                        # Ausgabe der Vektoren
-                        self.joystick_callback(x_value, y_value, x_value2, y_value2, r1, r2)
+    def handle_button_down(self, event):
+        logger.info(f"Joystick {event.joy} Button {event.button} pressed.")
+        action = "shoot" if event.button == 0 else "teamcomm_button" if event.button == 11 else None
+        if action:
+            self.button_callback(event.button, action)
 
-                    elif event.type == pygame.JOYBUTTONDOWN:
-                        # Behandle Knopfdruck-Ereignisse
-                        print(f"Joystick {event.joy} Button {event.button} pressed.")
+    def handle_button_up(self, event):
+        logger.info(f"Joystick {event.joy} Button {event.button} released.")
+        action = "shootstop" if event.button in {7, 8} else "alignstop" if event.button == 6 else None
+        if action:
+            self.button_callback(event.button, action)
 
-                        if event.button == 7:  # Shoot left
-                            self.button_callback(event.button, "shootL")
-                        elif event.button == 8:  # Shoot right
-                            self.button_callback(event.button, "shootR")
-                        elif event.button == 6:
-                            self.button_callback(event.button, "align")
-                        elif event.button == 0:
-                            self.button_callback(event.button, "stopmove")
-
-
-                    elif event.type == pygame.JOYBUTTONUP:
-                        # Behandle Knopfloslass-Ereignisse
-                        print(f"Joystick {event.joy} Button {event.button} released.")
-                        if event.button in {7, 8}:
-                            self.button_callback(event.button, "shootstop")
-                        elif event.button == 6:
-                            self.button_callback(event.button, "alignstop")
-
-                    elif event.type == pygame.QUIT:
-                        running = False # false to break While True
-
-        finally:
-            pygame.quit()
     def button_callback(self, button, action):
-        print(f"Button {button} action: {action}")
-
-
-
-    def joystick_callback(self, x1, y1, x2, y2, r1, r2):
-
-
-        if r1 >= 0.5 or r2 >= 0.5:
-            print("SHOOOOOOTTTTTT!!!!!!!!!!!!")
+        logger.info(f"Button {button} action: {action}")
+        if button == 11 and action == "teamcomm_button":
             self.walk_control.strategy.options["button_pressed"].value = True
 
-        if r1 <= 0.5 or r2 <= 0.5:
-            self.walk_control.strategy.options["button_pressed"].value = False
+    def deadband_filter(self, min_value, value, max_value):
+        if value < 0:
+            value -= min_value
+            if value > 0:
+                value = 0
+        if value > 0:
+            value -= max_value
+            if value < 0:
+                value = 0
+        return value
 
+    def joystick_callback(self, x1, y1, x2, y2, r1, r2):
+        if r2 >= 0.5:
+            logger.info("[INFO]: Button pressed MANUAL")
+            self.walk_control.strategy.options["button_pressed_manual"].value = True
+        if r1 >= 0.5:
+            logger.info("[INFO]: Button pressed AUTONOM")
+            self.walk_control.strategy.options["button_pressed_autonom"].value = True
+        if r1 <= 0.5 and r2 <= 0.5:
+            self.walk_control.strategy.options["button_pressed_autonom"].value = False
+            self.walk_control.strategy.options["button_pressed_manual"].value = False
 
-        vx = y1 * 0.5  # Skalierung der Geschwindigkeit
+        x1 = self.deadband_filter(-0.25, x1, 0.25)
+        y1 = self.deadband_filter(-0.25, y1, 0.25)
+        x2 = self.deadband_filter(-0.25, x2, 0.25)
+
+        vx = y1 * 0.5  # Scale velocity
         vy = x1 * 0.5
         va = x2 * 2
-        #print(f"vx: ", {vx}, "vy: ", {vy}, "va: ", {va})
+
+        logger.debug(f"vx: {vx}, vy: {vy}, va: {va}")
         self.walk_control.set_velocity(-vx, -vy, -va)
-
-
