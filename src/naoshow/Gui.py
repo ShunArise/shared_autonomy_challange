@@ -2,13 +2,14 @@ import pygame
 import math
 import sys
 from PIL import Image
+import threading
 
-import SPLStandardMessage as SPL
-import UDPReceiver
-import CameraStream
+import src.naoshow.SPLStandartMessage as SPL
+import src.naoshow.UDPReceiver as UDP
+import src.naoshow.CameraStream as CS
 
 class Gui:
-    __init__(self):
+    def __init__(self):
         # Field dimensions and margins
         self.field_width = 900
         self.field_height = 600
@@ -18,7 +19,7 @@ class Gui:
         self.img_height = 960
 
     # Draw the field with robots and the ball
-    def draw_field(window, width, height, robots):
+    def draw_field(self, window, width, height, robots):
         color_green = (0, 255, 0)
         color_blue = (0, 0, 255)
         color_orange = (255, 165, 0)
@@ -34,7 +35,7 @@ class Gui:
         scaled_field_width = self.field_width * scale
         scaled_field_height = self.field_height * scale
         scaled_margin = self.margin * scale
-        margin_x = img_width + (width - self.img_width - scaled_field_width - 2 * scaled_margin) // 2
+        margin_x = self.img_width + (width - self.img_width - scaled_field_width - 2 * scaled_margin) // 2
         margin_y = (height - scaled_field_height - 2 * scaled_margin) // 2
 
         # Draw the field
@@ -79,15 +80,15 @@ class Gui:
             pygame.draw.circle(window, color_orange, [int(ball_x), int(ball_y)], 5, 0)
             pygame.draw.circle(window, color_black, [int(ball_x), int(ball_y)], 5, 1)
 
-    def run():
+    def run(self, ip_addr):
         robots = {}
         running = True
         fps = 1 / 30
 
-        camera_thread = CameraStream(running, fps)
+        camera_thread = CS.CameraStream(running, fps, ip_addr)
         camera_thread.start()
 
-        udp_thread = UDPReceiver(running, fps)
+        udp_thread = UDP.UDPReceiver(running, fps)
         udp_thread.start()
 
         pygame.init()
@@ -120,7 +121,7 @@ class Gui:
                 resized_image = pygame.transform.scale(camera_thread.image, (int(new_width), int(new_height)))
                 
             robots = udp_thread.robots
-            draw_field(window, width, height)
+            self.draw_field(window, width, height)
             if resized_image:
                 window.blit(resized_image, (0, 0))
             

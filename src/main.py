@@ -13,11 +13,11 @@ def main(joystick):
     #robot_display.run(robot_addr)
     print("[WARNING]: Before Walk_control")
 
-    robot_addr = "192.168.13.11"  # roboter abhängig
-    walk_control = WalkControl(robot_addr)
+    ip_addr = "192.168.13.12"  # roboter abhängig
+    walk_control = WalkControl(ip_addr)
     
-    gui = GUI()
-    gui.run()
+    gui = GUI.Gui()
+    gui.run(ip_addr)
 
 if __name__ == "__main__":
     print("Systems start...")

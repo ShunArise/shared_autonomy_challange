@@ -2,14 +2,14 @@ import threading
 from io import BytesIO
 from PIL import Image
 
-from naobackend.robot_jpeg_image_stream import RobotJpegImageStream
+from src.naobackend.robot_jpeg_image_stream import RobotJpegImageStream
 
 class CameraStream(threading.Thread):
-    def __init__(self, running, fps):
+    def __init__(self, running, fps, ip_addr):
         threading.Thread.__init__(self)
         self.running = running
         self.fps = fps
-        self.stream = RobotJpegImageStream("127.0.0.1")
+        self.stream = RobotJpegImageStream(ip_addr, port=20013)
         self.image = None
         self.img_upper = None
         self.img_lower = None
