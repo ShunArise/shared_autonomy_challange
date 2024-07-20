@@ -1,22 +1,23 @@
 from app.app import *
-from joystickhandler.joystick_handler import *
-
-
+from src.joystickhandler.joystick_handler import *
+from src.walkcontrol.walk_control import *
+import src.naoshow.Gui as GUI
 
 def main(joystick):
     #app = App(['10.0.13.17'])
     #clicked_ip = app.run()
     #robot_addr = clicked_ip
+    isrunning = True
 
     #robot_display = RobotImageDisplay()
     #robot_display.run(robot_addr)
     print("[WARNING]: Before Walk_control")
 
-    robot_addr = "10.0.13.6"
-    walk_control = WalkControl(robot_addr)
-    print("[INFO]: After Walk_control; Before JoystickHandler")
-    handler = JoystickHandler(walk_control)
-    handler.get_joystick_values(joystick)
+    ip_addr = "192.168.13.6"  # roboter abhängig
+    walk_control = WalkControl(ip_addr)
+
+    gui = GUI.Gui()
+    gui.run("127.0.0.1")
 
 if __name__ == "__main__":
     print("Systems start...")

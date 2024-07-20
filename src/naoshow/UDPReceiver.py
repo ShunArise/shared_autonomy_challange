@@ -3,15 +3,18 @@ import time
 import threading
 import src.naoshow.SPLStandartMessage as SPL
 class UDPReceiver(threading.Thread):
-    infocast_port = 20013
-    
+
     def __init__(self, running, fps):
+
         threading.Thread.__init__(self)
         self.running = running
+        self.infocast_port = 20013
+
         self.fps = fps
         self.robots = {}
         
     def run(self):
+        return
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(("", self.infocast_port))
 

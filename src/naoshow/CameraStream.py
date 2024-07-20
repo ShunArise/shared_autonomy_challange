@@ -1,6 +1,8 @@
 import threading
 from io import BytesIO
 from PIL import Image
+import pygame
+import time
 
 from src.naobackend.robot_jpeg_image_stream import RobotJpegImageStream
 
@@ -19,11 +21,13 @@ class CameraStream(threading.Thread):
             # Fetch images from the robot
             try:
                 self.img_upper = Image.open(BytesIO(self.stream.images_upper_cam.get_nowait()))
+                print("upper")
             except:
                 pass
             
             try:
                 self.img_lower = Image.open(BytesIO(self.stream.images_lower_cam.get_nowait()))
+                print("lower")
             except:
                 pass
 

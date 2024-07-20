@@ -8,8 +8,9 @@ import src.naoshow.SPLStandartMessage as SPL
 import src.naoshow.UDPReceiver as UDP
 import src.naoshow.CameraStream as CS
 
-class Gui:
+class Gui(threading.Thread):
     def __init__(self):
+        threading.Thread.__init__(self)
         # Field dimensions and margins
         self.field_width = 900
         self.field_height = 600
@@ -81,6 +82,7 @@ class Gui:
             pygame.draw.circle(window, color_black, [int(ball_x), int(ball_y)], 5, 1)
 
     def run(self, ip_addr):
+
         robots = {}
         running = True
         fps = 1 / 30
@@ -121,13 +123,18 @@ class Gui:
                 resized_image = pygame.transform.scale(camera_thread.image, (int(new_width), int(new_height)))
                 
             robots = udp_thread.robots
-            self.draw_field(window, width, height)
+
+            self.draw_field(window, width, height, robots)
             if resized_image:
                 window.blit(resized_image, (0, 0))
-            
+
+
             pygame.display.flip()
 
-        camera_thread.join()
-        udp_thread.join()
-        
+            camera_thread.join()
+            udp_thread.join()
+
+
+
+
         pygame.quit()

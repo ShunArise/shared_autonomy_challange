@@ -17,13 +17,14 @@ def main() -> None:
     if len(sys.argv) > 1:
         robot_addr = sys.argv[1]
     else:
-        robot_addr = "192.168.13.11"
+        robot_addr = "127.0.0.1"
 
     global img_upper
     global img_lower
 
     # Connect to the robot
     stream = RobotJpegImageStream(robot_addr)
+
 
     # Set up the Pygame window (resizable)
     screen = pygame.display.set_mode((640, 960), pygame.RESIZABLE)
