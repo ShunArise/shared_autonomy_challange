@@ -12,7 +12,7 @@ def main(joystick):
     #robot_display.run(robot_addr)
     print("[WARNING]: Before Walk_control")
 
-    robot_addr = "10.0.13.17"
+    robot_addr = "10.0.13.6"
     walk_control = WalkControl(robot_addr)
     print("[INFO]: After Walk_control; Before JoystickHandler")
     handler = JoystickHandler(walk_control)

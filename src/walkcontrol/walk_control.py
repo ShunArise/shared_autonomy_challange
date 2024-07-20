@@ -15,11 +15,10 @@ class WalkControl:
     def __init__(self, ip):
         # Connect to robot
         self.robot = roptions.RobotOptionConnection()
-        print("HIER")
         self.robot.connect(ip)
-        print("da")
         try:
-            self.walk_tuner = self.robot.firmware_options.option_sets["manual_strategy"]
+            self.strategy = self.robot.firmware_options.option_sets["manual_strategy"]
+            self.walk_tuner = self.robot.firmware_options.option_sets["walktuner"]
             print("")
             self.param_tuner = self.robot.bridge_options.option_sets["walkingengine"]
         except KeyError:
